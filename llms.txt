@@ -5,7 +5,7 @@
 ## Datos clave
 - Ubicación: Cancún / Riviera Maya, Quintana Roo, México
 - Horario: Lunes a domingo, 7:00 am – 9:00 pm
-- Contacto: info@travelfytours.com · +52 998 123 4567
+- Contacto: info@travelfytours.com · +52 999 999 9999
 - Moneda: precios en USD (también se acepta MXN)
 - Dominio: https://www.travelfytours.com/
 
@@ -34,6 +34,6 @@
 
 ## Páginas
 - Inicio: https://www.travelfytours.com/
-- Tours: https://www.travelfytours.com/#tours
+- Todos los tours: https://www.travelfytours.com/tours.html
 - Preguntas frecuentes: https://www.travelfytours.com/#faq
 - Contacto: https://www.travelfytours.com/#contacto

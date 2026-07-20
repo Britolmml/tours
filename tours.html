@@ -1177,13 +1177,15 @@
 </div>
 
 <!-- ===== SUPABASE ===== -->
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   /* ============================================================
      CONFIG SUPABASE → pega tu URL y anon key (Project Settings → API)
      ============================================================ */
-  const SUPABASE_URL  = "https://udvfldiosltwybiszzgb.supabase.co";
-  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkdmZsZGlvc2x0d3liaXN6emdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0Mjg2MDgsImV4cCI6MjA5OTAwNDYwOH0.8RRG3BmPdVagBNr5L98mhIEaalI3qaKX403kLbryT9w";
+  const CFG = window.TRAVELFY_CONFIG || {};
+  const SUPABASE_URL = CFG.SUPABASE_URL || "";
+  const SUPABASE_ANON = CFG.SUPABASE_ANON || "";
 
   let supa = null;
   const supaReady = /^https:\/\/[a-z0-9-]+\.supabase\.co/i.test(SUPABASE_URL)
@@ -1219,6 +1221,12 @@
       const price = (t.price != null && t.price !== '')
         ? `<span class="price">Desde <b>$${esc(t.price)} ${cur}</b></span>`
         : `<span class="price">Consulta disponibilidad</span>`;
+      // Si el tour tiene slug (página de detalle), la tarjeta enlaza a ella.
+      // Si no, cae al modal directo (tours sin ficha aún).
+      const link = t.slug ? `tours/${esc(t.slug)}.html` : null;
+      const openEl = link
+        ? `<a class="card-book" href="${link}" aria-label="Ver ${esc(t.name)}">Ver ${esc(t.name)}</a>`
+        : `<button class="card-book" data-tour="${esc(t.name)}">Reservar ${esc(t.name)}</button>`;
       return `
       <article class="card" data-cat="${cat}"${t.featured?' data-pop="1"':''}>
         ${media}${badge}
@@ -1227,7 +1235,7 @@
           <h3>${esc(t.name)}</h3>
           <div class="card-meta">${rating}${price}</div>
         </div>
-        <button class="card-book" data-tour="${esc(t.name)}">Reservar ${esc(t.name)}</button>
+        ${openEl}
       </article>`;
     }).join('');
 
@@ -1264,7 +1272,7 @@
   function closeModal(){ modal.classList.remove('open'); if(lastFocus) lastFocus.focus(); }
 
   function bindCards(){
-    document.querySelectorAll('.card-book').forEach(b=>{ b.onclick = ()=> openModal(b.dataset.tour); });
+    document.querySelectorAll('button.card-book').forEach(b=>{ b.onclick = ()=> openModal(b.dataset.tour); });
     document.querySelectorAll('.fav').forEach(f=>{
       f.onclick = e => { e.stopPropagation(); f.classList.toggle('on');
         f.setAttribute('aria-pressed', f.classList.contains('on')); };

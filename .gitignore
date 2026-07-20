@@ -1,0 +1,5 @@
+tours-contenido.json
+incluye/
+supabase-schema.sql
+supabase-migracion-detalle.sql
+supabase-contenido.sql

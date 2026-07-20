@@ -1401,8 +1401,8 @@
   /* ============================================================
      CONFIG SUPABASE → pega tu URL y anon key (Project Settings → API)
      ============================================================ */
-  const SUPABASE_URL  = "https://TU-PROYECTO.supabase.co";
-  const SUPABASE_ANON = "TU_ANON_KEY";
+  const SUPABASE_URL  = "https://udvfldiosltwybiszzgb.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkdmZsZGlvc2x0d3liaXN6emdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0Mjg2MDgsImV4cCI6MjA5OTAwNDYwOH0.8RRG3BmPdVagBNr5L98mhIEaalI3qaKX403kLbryT9w";
 
   let supa = null;
   const supaReady = /^https:\/\/[a-z0-9-]+\.supabase\.co/i.test(SUPABASE_URL)
@@ -1452,8 +1452,10 @@
       // Solo mostramos calificación si existe de verdad en la base
       const rating = (t.rating && t.reviews_count)
         ? `<span class="rating"><svg viewBox="0 0 24 24"><path d="m12 2 3 6.5 7 .9-5 4.9 1.2 7L12 18l-6.2 3.3L7 14.3l-5-4.9 7-.9L12 2Z"/></svg>${esc(t.rating)} <span>(${esc(t.reviews_count)})</span></span>` : '';
+      // La moneda viene de la base (USD o MXN). Nunca se asume.
+      const cur = esc(t.currency || 'USD');
       const price = (t.price != null && t.price !== '')
-        ? `<span class="price">Desde <b>$${esc(t.price)} USD</b></span>`
+        ? `<span class="price">Desde <b>$${esc(t.price)} ${cur}</b></span>`
         : `<span class="price">Consulta disponibilidad</span>`;
       return `
       <article class="card" data-cat="${cat}"${t.featured?' data-pop="1"':''}>

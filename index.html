@@ -904,11 +904,12 @@
         <div class="sf">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
           <select id="sDest" aria-label="Destino">
-            <option value="pop">¿A dónde quieres ir?</option>
-            <option value="cancun">Cancún</option>
-            <option value="isla">Isla Mujeres</option>
-            <option value="riviera">Riviera Maya</option>
-            <option value="all">Ver todos los destinos</option>
+            <option value="pop">¿Qué quieres vivir?</option>
+            <option value="arqueologia">Arqueología (Chichén, Tulum)</option>
+            <option value="cenotes">Cenotes y ríos</option>
+            <option value="delfines">Nado con delfines</option>
+            <option value="aventura">Aventura y mar</option>
+            <option value="all">Ver todos los tours</option>
           </select>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
         </div>
@@ -1048,9 +1049,10 @@
 
     <div class="tour-filters" role="tablist">
       <button class="tf active" data-cat="pop" role="tab" aria-selected="true">Populares</button>
-      <button class="tf" data-cat="cancun" role="tab" aria-selected="false">Cancún</button>
-      <button class="tf" data-cat="isla" role="tab" aria-selected="false">Isla Mujeres</button>
-      <button class="tf" data-cat="riviera" role="tab" aria-selected="false">Riviera Maya</button>
+      <button class="tf" data-cat="arqueologia" role="tab" aria-selected="false">Arqueología</button>
+      <button class="tf" data-cat="cenotes" role="tab" aria-selected="false">Cenotes y ríos</button>
+      <button class="tf" data-cat="delfines" role="tab" aria-selected="false">Nado con delfines</button>
+      <button class="tf" data-cat="aventura" role="tab" aria-selected="false">Aventura</button>
       <a href="tours.html" class="tf tf-link">Ver todos
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -1466,7 +1468,7 @@
         ? `<a class="card-book" href="${link}" aria-label="Ver ${esc(t.name)}">Ver ${esc(t.name)}</a>`
         : `<button class="card-book" data-tour="${esc(t.name)}">Reservar ${esc(t.name)}</button>`;
       return `
-      <article class="card" data-cat="${cat}"${t.featured?' data-pop="1"':''}>
+      <article class="card" data-cat="${cat}" data-exp="${esc(t.experience||'aventura')}"${t.featured?' data-pop="1"':''}>
         ${media}${badge}
         <button class="fav" aria-label="Guardar ${esc(t.name)}">${HEART}</button>
         <div class="card-body">
@@ -1556,7 +1558,7 @@
       let show;
       if(cat==='pop')      show = c.dataset.pop === '1';
       else if(cat==='all') show = true;
-      else                 show = c.dataset.cat === cat;
+      else                 show = c.dataset.exp === cat;
       c.classList.toggle('hide', !show);
     });
   }

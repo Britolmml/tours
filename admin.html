@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · Travelfy Tours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E2A47; --navy-900:#071B2F; --cyan:#1CA9CE; --gold:#F5A524;
+    --ink:#0E2A47; --muted:#5c7691; --line:#e4ecf3; --bg:#f4f8fb; --card:#fff;
+    --ok:#16a34a; --warn:#d97706; --bad:#dc2626; --info:#2563eb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  h1,h2,h3{font-family:Poppins,sans-serif;margin:0}
+  button{font-family:inherit;cursor:pointer}
+  a{color:var(--cyan)}
+
+  /* ---------- Login ---------- */
+  .login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;
+    background:linear-gradient(150deg,var(--navy-900),var(--navy) 60%,#123a5e)}
+  .login-card{background:#fff;border-radius:18px;padding:38px 34px;width:100%;max-width:390px;
+    box-shadow:0 30px 70px rgba(7,27,47,.4)}
+  .login-card .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .login-card .brand svg{width:30px;height:30px}
+  .login-card .brand b{font-family:Poppins;font-weight:800;font-size:1.35rem;color:var(--navy);letter-spacing:-.5px}
+  .login-card p.sub{color:var(--muted);margin:0 0 22px}
+  .login-card label{display:block;font-weight:600;margin:14px 0 6px;font-size:.85rem}
+  .login-card input{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:15px}
+  .login-card input:focus{outline:none;border-color:var(--cyan)}
+  .login-card .btn{width:100%;margin-top:22px;background:var(--cyan);color:#fff;border:none;
+    padding:13px;border-radius:10px;font-weight:700;font-size:15px}
+  .login-card .btn:hover{background:#178cab}
+  .login-err{background:#fff1f1;color:var(--bad);padding:10px 12px;border-radius:9px;margin-top:16px;
+    font-size:.85rem;display:none}
+
+  /* ---------- App shell ---------- */
+  .app{display:none;min-height:100vh}
+  .side{position:fixed;left:0;top:0;bottom:0;width:230px;background:var(--navy);color:#cfe0ee;
+    display:flex;flex-direction:column;padding:0}
+  .side .logo{display:flex;align-items:center;gap:9px;padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .side .logo svg{width:26px;height:26px}
+  .side .logo b{font-family:Poppins;font-weight:800;color:#fff;font-size:1.15rem;letter-spacing:-.4px}
+  .side nav{padding:14px 12px;display:flex;flex-direction:column;gap:3px}
+  .side nav a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;
+    color:#cfe0ee;text-decoration:none;font-weight:500;font-size:.92rem}
+  .side nav a.active,.side nav a:hover{background:rgba(255,255,255,.1);color:#fff}
+  .side nav a svg{width:18px;height:18px;opacity:.9}
+  .side .foot{margin-top:auto;padding:16px 18px;border-top:1px solid rgba(255,255,255,.08);font-size:.82rem}
+  .side .foot .who{color:#9fb8ce;margin-bottom:9px;word-break:break-all}
+  .side .foot button{background:transparent;border:1px solid rgba(255,255,255,.2);color:#cfe0ee;
+    padding:8px 12px;border-radius:8px;font-size:.82rem;width:100%}
+  .side .foot button:hover{background:rgba(255,255,255,.1);color:#fff}
+
+  .main{margin-left:230px;padding:26px 30px 60px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+  .topbar h1{font-size:1.5rem;color:var(--navy)}
+  .topbar .date{color:var(--muted);font-weight:600}
+
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+  .kpi .lbl{color:var(--muted);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  .kpi .val{font-family:Poppins;font-weight:800;font-size:1.7rem;margin-top:4px;color:var(--navy)}
+  .kpi.green .val{color:var(--ok)} .kpi.cyan .val{color:var(--cyan)} .kpi.gold .val{color:var(--gold)}
+
+  /* Filtros */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}
+  .filters .f label{display:block;font-weight:600;font-size:.8rem;margin-bottom:5px;color:var(--muted)}
+  .filters .f input,.filters .f select{width:100%;padding:9px 11px;border:1.5px solid var(--line);
+    border-radius:9px;font-size:14px;background:#fff}
+  .filters .f input:focus,.filters .f select:focus{outline:none;border-color:var(--cyan)}
+  .filters .acts{display:flex;gap:8px}
+  .btn-primary{background:var(--cyan);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-weight:700}
+  .btn-primary:hover{background:#178cab}
+  .btn-ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line);padding:10px 16px;border-radius:9px;font-weight:600}
+  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+  /* Tabla */
+  .tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .tbl-scroll{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:900px}
+  thead th{background:#f7fafc;text-align:left;padding:12px 14px;font-weight:700;color:var(--muted);
+    font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:hover{background:#fafcfe}
+  tbody tr:last-child td{border-bottom:none}
+  .cust b{display:block;font-weight:600}
+  .cust span{color:var(--muted);font-size:.82rem}
+  .money{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+  .util-pos{color:var(--ok);font-weight:700} .util-neg{color:var(--bad);font-weight:700} .util-zero{color:var(--muted)}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.76rem;font-weight:700;white-space:nowrap}
+  .st-nueva{background:#eff6ff;color:var(--info)}
+  .st-contactado{background:#fef9ec;color:var(--warn)}
+  .st-confirmada{background:#eefdf3;color:var(--ok)}
+  .st-pagada{background:#e7f8ef;color:#0f9d58}
+  .st-cancelada{background:#fdeeee;color:var(--bad)}
+  .st-sel{border:1.5px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.82rem;font-weight:600;background:#fff}
+  .row-act{background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--muted)}
+  .row-act:hover{border-color:var(--cyan);color:var(--cyan)}
+  .empty{padding:50px 20px;text-align:center;color:var(--muted)}
+  .empty b{display:block;font-size:1.05rem;color:var(--navy);margin-bottom:6px;font-family:Poppins}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(7,27,47,.55);display:none;place-items:center;padding:20px;z-index:50}
+  .modal.on{display:grid}
+  .modal-card{background:#fff;border-radius:16px;padding:26px;width:100%;max-width:460px;max-height:90vh;overflow:auto}
+  .modal-card h2{font-size:1.25rem;margin-bottom:4px}
+  .modal-card p.hint{color:var(--muted);margin:0 0 18px;font-size:.88rem}
+  .modal-card label{display:block;font-weight:600;font-size:.82rem;margin:12px 0 5px}
+  .modal-card input,.modal-card select,.modal-card textarea{width:100%;padding:10px 12px;
+    border:1.5px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit}
+  .modal-card input:focus,.modal-card select:focus,.modal-card textarea:focus{outline:none;border-color:var(--cyan)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal-foot{display:flex;gap:10px;margin-top:22px}
+  .modal-foot .btn-primary,.modal-foot .btn-ghost{flex:1;text-align:center}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;
+    padding:12px 20px;border-radius:10px;font-weight:600;box-shadow:0 12px 30px rgba(7,27,47,.3);
+    display:none;z-index:60}
+
+  @media(max-width:820px){
+    .side{width:64px} .side .logo b,.side nav a span,.side .foot .who{display:none}
+    .side nav a{justify-content:center} .main{margin-left:64px;padding:18px}
+    .side .foot button{padding:8px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div class="login-wrap" id="loginView">
+  <div class="login-card">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0E2A47" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+      <b>Travelfy</b>
+    </div>
+    <p class="sub">Panel de reservas · acceso privado</p>
+    <label for="lgEmail">Correo</label>
+    <input id="lgEmail" type="email" autocomplete="username" placeholder="tucorreo@travelfy.com">
+    <label for="lgPass">Contraseña</label>
+    <input id="lgPass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="btn" id="lgBtn">Entrar</button>
+    <div class="login-err" id="lgErr"></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="app" id="appView">
+  <aside class="side">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+      <b>Travelfy</b>
+    </div>
+    <nav>
+      <a class="active" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/></svg><span>Reservas</span></a>
+      <a href="index.html" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg><span>Ver sitio</span></a>
+    </nav>
+    <div class="foot">
+      <div class="who" id="whoAmI"></div>
+      <button id="logoutBtn">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1>Reservas</h1>
+      <div class="date" id="today"></div>
+    </div>
+
+    <div class="kpis" id="kpis">
+      <div class="kpi"><div class="lbl">Total</div><div class="val" id="kTotal">—</div></div>
+      <div class="kpi cyan"><div class="lbl">Nuevas</div><div class="val" id="kNuevas">—</div></div>
+      <div class="kpi green"><div class="lbl">Confirmadas</div><div class="val" id="kConf">—</div></div>
+      <div class="kpi gold"><div class="lbl">Utilidad estimada</div><div class="val" id="kUtil">—</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="filters">
+        <div class="f"><label>Cliente</label><input id="fCliente" placeholder="Nombre o email"></div>
+        <div class="f"><label>Tour</label><input id="fTour" placeholder="Nombre del tour"></div>
+        <div class="f"><label>Estatus</label>
+          <select id="fStatus">
+            <option value="">Todos</option>
+            <option value="nueva">Nueva</option>
+            <option value="contactado">Contactado</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="pagada">Pagada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="f"><label>Desde</label><input id="fDesde" type="date"></div>
+        <div class="f"><label>Hasta</label><input id="fHasta" type="date"></div>
+        <div class="acts">
+          <button class="btn-ghost" id="btnClear">Limpiar</button>
+          <button class="btn-primary" id="btnNew">+ Reserva</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <div class="tbl-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Cliente</th><th>Tour</th><th>Fecha</th><th>Pax</th>
+              <th>Venta</th><th>Costo</th><th>Utilidad</th><th>Estatus</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="10" class="empty">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODAL crear/editar ============ -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <h2 id="mTitle">Nueva reserva</h2>
+    <p class="hint">Los campos con * son obligatorios.</p>
+    <input type="hidden" id="mId">
+    <div class="grid2">
+      <div><label>Nombre *</label><input id="mName"></div>
+      <div><label>Teléfono</label><input id="mPhone"></div>
+    </div>
+    <label>Email *</label><input id="mEmail" type="email">
+    <label>Tour *</label><input id="mTour" placeholder="Ej. Río Secreto Clásico">
+    <div class="grid2">
+      <div><label>Fecha</label><input id="mDate" type="date"></div>
+      <div><label>Personas</label><input id="mPeople" type="number" min="1" value="2"></div>
+    </div>
+    <div class="grid2">
+      <div><label>Precio venta</label><input id="mSale" type="number" step="0.01" placeholder="0.00"></div>
+      <div><label>Costo proveedor</label><input id="mCost" type="number" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="grid2">
+      <div><label>Moneda</label>
+        <select id="mCurrency"><option>USD</option><option>MXN</option></select>
+      </div>
+      <div><label>Estatus</label>
+        <select id="mStatus">
+          <option value="nueva">Nueva</option>
+          <option value="contactado">Contactado</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="pagada">Pagada</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+      </div>
+    </div>
+    <label>Proveedor</label><input id="mProvider" placeholder="Ej. 13Baktun, Río Secreto…">
+    <label>Notas</label><textarea id="mNotes" rows="2"></textarea>
+    <div class="modal-foot">
+      <button class="btn-ghost" id="mCancel">Cancelar</button>
+      <button class="btn-primary" id="mSave">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+  "use strict";
+  const CFG = window.TRAVELFY_CONFIG || {};
+  if(!CFG.SUPABASE_URL || CFG.SUPABASE_URL.includes('TU-PROYECTO')){
+    alert('Falta configurar config.js con tu URL y anon key de Supabase.');
+  }
+  const sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON);
+
+  const $ = id => document.getElementById(id);
+  const loginView=$('loginView'), appView=$('appView');
+  let ALL = [];   // reservas cargadas
+
+  /* ---------- Sesión ---------- */
+  async function boot(){
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session){ showApp(session); } else { showLogin(); }
+  }
+  function showLogin(){ loginView.style.display='grid'; appView.style.display='none'; }
+  function showApp(session){
+    loginView.style.display='none'; appView.style.display='block';
+    $('whoAmI').textContent = session.user.email;
+    $('today').textContent = new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    load();
+  }
+
+  $('lgBtn').onclick = async ()=>{
+    const email=$('lgEmail').value.trim(), password=$('lgPass').value;
+    const err=$('lgErr'); err.style.display='none';
+    if(!email||!password){ err.textContent='Escribe correo y contraseña.'; err.style.display='block'; return; }
+    $('lgBtn').textContent='Entrando…'; $('lgBtn').disabled=true;
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    $('lgBtn').textContent='Entrar'; $('lgBtn').disabled=false;
+    if(error){ err.textContent = error.message==='Invalid login credentials' ? 'Correo o contraseña incorrectos.' : error.message; err.style.display='block'; return; }
+    showApp(data.session);
+  };
+  $('lgPass').addEventListener('keydown',e=>{ if(e.key==='Enter') $('lgBtn').click(); });
+  $('logoutBtn').onclick = async ()=>{ await sb.auth.signOut(); ALL=[]; showLogin(); };
+
+  /* ---------- Cargar reservas ---------- */
+  async function load(){
+    const { data, error } = await sb.from('reservations').select('*').order('created_at',{ascending:false});
+    if(error){
+      $('rows').innerHTML = `<tr><td colspan="10" class="empty"><b>No se pudieron cargar las reservas</b>${esc(error.message)}</td></tr>`;
+      return;
+    }
+    ALL = data || [];
+    render();
+  }
+
+  /* ---------- Filtrar + pintar ---------- */
+  function filtered(){
+    const c=$('fCliente').value.trim().toLowerCase();
+    const t=$('fTour').value.trim().toLowerCase();
+    const s=$('fStatus').value;
+    const d1=$('fDesde').value, d2=$('fHasta').value;
+    return ALL.filter(r=>{
+      if(c && !((r.name||'').toLowerCase().includes(c) || (r.email||'').toLowerCase().includes(c))) return false;
+      if(t && !((r.tour||'').toLowerCase().includes(t))) return false;
+      if(s && (r.status||'nueva')!==s) return false;
+      if(d1 && (!r.tour_date || r.tour_date < d1)) return false;
+      if(d2 && (!r.tour_date || r.tour_date > d2)) return false;
+      return true;
+    });
+  }
+
+  function util(r){
+    if(r.sale_price==null || r.cost_price==null) return null;
+    return Number(r.sale_price) - Number(r.cost_price);
+  }
+  function money(v,cur){ return v==null||v==='' ? '—' : '$'+Number(v).toLocaleString('es-MX',{minimumFractionDigits:0,maximumFractionDigits:2})+' '+(cur||'USD'); }
+
+  function render(){
+    const list = filtered();
+    // KPIs (sobre lo filtrado)
+    $('kTotal').textContent = list.length;
+    $('kNuevas').textContent = list.filter(r=>(r.status||'nueva')==='nueva').length;
+    $('kConf').textContent = list.filter(r=>['confirmada','pagada'].includes(r.status)).length;
+    const utilSum = list.reduce((a,r)=>{ const u=util(r); return a + (u&&u>0?u:0); },0);
+    $('kUtil').textContent = utilSum ? '$'+utilSum.toLocaleString('es-MX') : '—';
+
+    if(!list.length){
+      $('rows').innerHTML = `<tr><td colspan="10" class="empty"><b>Sin reservas</b>Ajusta los filtros o crea una nueva.</td></tr>`;
+      return;
+    }
+    const STs=['nueva','contactado','confirmada','pagada','cancelada'];
+    $('rows').innerHTML = list.map((r,i)=>{
+      const u=util(r);
+      const uCls = u==null?'util-zero':(u>0?'util-pos':(u<0?'util-neg':'util-zero'));
+      const uTxt = u==null?'—':money(u,r.currency);
+      const st = r.status||'nueva';
+      const opts = STs.map(s=>`<option value="${s}"${s===st?' selected':''}>${cap(s)}</option>`).join('');
+      const dt = r.tour_date ? new Date(r.tour_date+'T00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short'}) : '—';
+      return `<tr>
+        <td>${r.ref_code?esc(r.ref_code):('#'+(list.length-i))}</td>
+        <td class="cust"><b>${esc(r.name||'—')}</b><span>${esc(r.email||'')}${r.phone?' · '+esc(r.phone):''}</span></td>
+        <td>${esc(r.tour||'—')}${r.provider?`<br><span style="color:var(--muted);font-size:.8rem">${esc(r.provider)}</span>`:''}</td>
+        <td>${dt}</td>
+        <td>${r.people||1}</td>
+        <td class="money">${money(r.sale_price,r.currency)}</td>
+        <td class="money">${money(r.cost_price,r.currency)}</td>
+        <td class="money ${uCls}">${uTxt}</td>
+        <td><select class="st-sel st-${st}" data-id="${r.id}" data-st>${opts}</select></td>
+        <td><button class="row-act" data-edit="${r.id}">Editar</button></td>
+      </tr>`;
+    }).join('');
+
+    // cambiar estatus inline
+    document.querySelectorAll('select[data-st]').forEach(sel=>{
+      sel.onchange = async ()=>{
+        const id=sel.dataset.id, ns=sel.value;
+        sel.className='st-sel st-'+ns;
+        const { error } = await sb.from('reservations').update({status:ns}).eq('id',id);
+        if(error){ toast('Error al guardar: '+error.message); return; }
+        const row = ALL.find(x=>x.id===id); if(row) row.status=ns;
+        toast('Estatus actualizado');
+        // refrescar KPIs sin re-pintar toda la tabla
+        const l=filtered();
+        $('kNuevas').textContent=l.filter(r=>(r.status||'nueva')==='nueva').length;
+        $('kConf').textContent=l.filter(r=>['confirmada','pagada'].includes(r.status)).length;
+      };
+    });
+    document.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=> openModal(ALL.find(x=>x.id===b.dataset.edit));
+    });
+  }
+
+  /* ---------- Modal ---------- */
+  function openModal(r){
+    $('mTitle').textContent = r ? 'Editar reserva' : 'Nueva reserva';
+    $('mId').value = r?.id || '';
+    $('mName').value=r?.name||''; $('mPhone').value=r?.phone||'';
+    $('mEmail').value=r?.email||''; $('mTour').value=r?.tour||'';
+    $('mDate').value=r?.tour_date||''; $('mPeople').value=r?.people||2;
+    $('mSale').value=r?.sale_price??''; $('mCost').value=r?.cost_price??'';
+    $('mCurrency').value=r?.currency||'USD'; $('mStatus').value=r?.status||'nueva';
+    $('mProvider').value=r?.provider||''; $('mNotes').value=r?.notes||'';
+    $('modal').classList.add('on');
+  }
+  function closeModal(){ $('modal').classList.remove('on'); }
+  $('btnNew').onclick = ()=>openModal(null);
+  $('mCancel').onclick = closeModal;
+  $('modal').addEventListener('click',e=>{ if(e.target===$('modal')) closeModal(); });
+
+  $('mSave').onclick = async ()=>{
+    const name=$('mName').value.trim(), email=$('mEmail').value.trim(), tour=$('mTour').value.trim();
+    if(!name||!email||!tour){ toast('Nombre, email y tour son obligatorios'); return; }
+    const payload = {
+      name, email, tour,
+      phone:$('mPhone').value.trim()||null,
+      tour_date:$('mDate').value||null,
+      people:parseInt($('mPeople').value)||1,
+      sale_price:$('mSale').value===''?null:Number($('mSale').value),
+      cost_price:$('mCost').value===''?null:Number($('mCost').value),
+      currency:$('mCurrency').value,
+      status:$('mStatus').value,
+      provider:$('mProvider').value.trim()||null,
+      notes:$('mNotes').value.trim()||null
+    };
+    const id=$('mId').value;
+    $('mSave').textContent='Guardando…'; $('mSave').disabled=true;
+    let res;
+    if(id) res = await sb.from('reservations').update(payload).eq('id',id);
+    else   res = await sb.from('reservations').insert([payload]);
+    $('mSave').textContent='Guardar'; $('mSave').disabled=false;
+    if(res.error){ toast('Error: '+res.error.message); return; }
+    closeModal(); toast(id?'Reserva actualizada':'Reserva creada'); load();
+  };
+
+  /* ---------- Filtros ---------- */
+  ['fCliente','fTour','fStatus','fDesde','fHasta'].forEach(id=>{
+    $(id).addEventListener('input',render);
+    $(id).addEventListener('change',render);
+  });
+  $('btnClear').onclick = ()=>{
+    ['fCliente','fTour','fStatus','fDesde','fHasta'].forEach(id=>$(id).value='');
+    render();
+  };
+
+  /* ---------- utils ---------- */
+  function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  let toastT;
+  function toast(msg){ const t=$('toast'); t.textContent=msg; t.style.display='block';
+    clearTimeout(toastT); toastT=setTimeout(()=>t.style.display='none',2600); }
+
+  sb.auth.onAuthStateChange((_e,session)=>{ if(!session) showLogin(); });
+  boot();
+})();
+</script>
+</body>
+</html>

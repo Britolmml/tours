@@ -1196,6 +1196,15 @@
 
   const CAT_LABEL = { cancun:'Cancún', isla:'Isla Mujeres', riviera:'Riviera Maya' };
   const CAT_BG    = { cancun:'cm-catamaran', isla:'cm-isla', riviera:'cm-chichen' };
+  // Fotos propias por tour (cuando existen). Evita que todo 'riviera' use Chichén.
+  const IMG_BY_SLUG = {
+    'rio-secreto-clasico':'rio-secreto.webp','rio-secreto-plus':'rio-secreto.webp',
+    'rio-secreto-tulum':'rio-secreto.webp','rio-secreto-salty-sweet':'rio-secreto.webp',
+    'rio-secreto-coba':'rio-secreto.webp','rio-secreto-privilege':'rio-secreto.webp',
+    'chichen-itza-regular':'chichen-itza.webp','chichen-itza-deluxe':'chichen-itza.webp',
+    '4x1-regular':'tulum-4x1.webp','4x1-deluxe':'tulum-4x1.webp'
+  };
+  const IMG_BY_NAME = { 'Tour en ATV / Cuatrimoto':'atv-selva.webp', 'Catamarán Isla Mujeres':'catamaran.webp' };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -1210,8 +1219,9 @@
 
     document.getElementById('tourGrid').innerHTML = data.map(t=>{
       const cat   = esc(t.category || 'cancun');
-      const media = t.image_url
-        ? `<div class="card-media" style="background-image:url('${esc(t.image_url)}')"></div>`
+      const ownImg = t.image_url || IMG_BY_SLUG[t.slug] || IMG_BY_NAME[t.name] || null;
+      const media = ownImg
+        ? `<div class="card-media" style="background-image:url('${esc(ownImg)}')"></div>`
         : `<div class="card-media ${CAT_BG[cat]||'cm-catamaran'}"></div>`;
       const badge = t.badge ? `<span class="badge">${esc(t.badge)}</span>` : '';
       // Solo mostramos calificación si existe de verdad en la base

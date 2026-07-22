@@ -592,11 +592,11 @@
   .logo img{height:46px;width:auto;transition:opacity .25s ease}
   .logo .l-white{display:block}
   .logo .l-navy{display:none;position:absolute;top:0;left:0}
-  .logo{position:relative;display:block;margin-left:60px;}
+  .logo{position:relative;display:block}
   header.solid .logo .l-white{opacity:0}
   header.solid .logo .l-navy{display:block}
 
-  .nav-links{display:flex;gap:26px;margin-left:300px}
+  .nav-links{display:flex;gap:26px;margin-left:320px}
   .nav-links a{font-family:'Poppins';font-weight:500;font-size:.94rem;color:rgba(255,255,255,.92);
     padding:8px 0;position:relative;transition:color .2s}
   header.solid .nav-links a{color:var(--navy)}
@@ -1442,6 +1442,8 @@
   const CAT_BG    = { cancun:'cm-catamaran', isla:'cm-isla', riviera:'cm-chichen' };
   // Fotos propias por tour (cuando existen). Evita que todo 'riviera' use Chichén.
   const IMG_BY_SLUG = {
+    'catamaran-plus':'catamaran-isla.webp','catamaran-platino':'catamaran-isla.webp','catamaran-sunsations':'catamaran-isla.webp',
+    'atv-wild-pass':'atv-selva.webp','atv-caballos':'atv-selva.webp','snorkeling-adventure':'catamaran-isla.webp',
     'rio-secreto-clasico':'rio-secreto.webp','rio-secreto-plus':'rio-secreto.webp',
     'rio-secreto-tulum':'rio-secreto.webp','rio-secreto-salty-sweet':'rio-secreto.webp',
     'rio-secreto-coba':'rio-secreto.webp','rio-secreto-privilege':'rio-secreto.webp',
